@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.skeletonarmy.marrow.LynxUtil;
 import com.skeletonarmy.marrow.TimerEx;
 
+import org.firstinspires.ftc.teamcode.robot.assist.PollenAssist;
+import org.firstinspires.ftc.teamcode.robot.state.AssistState;
 import org.firstinspires.ftc.teamcode.robot.state.CollectingState;
 import org.firstinspires.ftc.teamcode.robot.state.IdleState;
 import org.firstinspires.ftc.teamcode.robot.state.LaunchingState;
@@ -24,17 +26,20 @@ public class Robot {
     public final Intake intake;
     public final Launcher launcher;
     public final RobotSnapshot snapshot;
+    public final PollenAssist assist;
 
     private TimerEx matchTimer;
 
     private final IdleState idle = new IdleState();
     private final CollectingState collecting = new CollectingState();
     private final LaunchingState Launching = new LaunchingState();
+    private final AssistState assistState = new AssistState();
     private TopState topState;
 
     public Robot(HardwareMap hardwareMap, Pose startPose) {
         hMap = hardwareMap;
         driveTrain = new Drivetrain(this,startPose);
+        assist = new PollenAssist(this);
         intake = new Intake(this);
         launcher = new Launcher(this);
         snapshot = new RobotSnapshot(driveTrain.mode(), intake.mode(), launcher.state(), launcher.getEnabled(), launcher.getFullAuto(), driveTrain.follower().pose().x(), driveTrain.follower().pose().y(), driveTrain.follower().pose().heading());
@@ -77,6 +82,17 @@ public class Robot {
         if (on) enterLaunching();
     }
 
+    public void startAssist(){
+        if (topState == assistState || topState == Launching) return;
+        assistState.setReturnTo(topState);
+        setState(assistState);
+    }
+
+    public void endAssist(){
+        if (topState != assistState) return;
+        setState(assistState.ReturnTo());
+    }
+
     public void toggleFieldCentric(){
         driveTrain.toggleFieldCentric();
     }
@@ -94,9 +110,11 @@ public class Robot {
     public void stop() {
         intake.stop();
         launcher.stop();
+        assist.stop();
     }
 
     public void drive(double forward, double strafe, double turn) {
+        if (topState == assistState) return;
         driveTrain.drive(forward, strafe, turn);
     }
 
@@ -114,7 +132,7 @@ public class Robot {
     }
 
     private void enterLaunching() {
-        if (topState == Launching) return;
+        if (topState == Launching || topState == assistState) return;
         Launching.setReturnTo(topState);
         setState(Launching);
     }

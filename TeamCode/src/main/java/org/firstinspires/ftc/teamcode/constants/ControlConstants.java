@@ -8,5 +8,7 @@ public final class ControlConstants {
 
     public static final int RUMBLE_READY_MS = 150;
 
+    public static final int RUMBLE_ARRIVED_MS = 200;   // UNMEASURED
+
     private ControlConstants() {}
 }

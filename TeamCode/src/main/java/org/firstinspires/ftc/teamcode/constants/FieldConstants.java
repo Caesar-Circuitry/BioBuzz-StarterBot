@@ -11,5 +11,7 @@ public final class FieldConstants {
 
     public static final Pose PARK_POSE = POSES.of(0,0,0);
 
+    public static final Pose[] POLLEN_PRESETS = {};
+
     private FieldConstants() {}
 }

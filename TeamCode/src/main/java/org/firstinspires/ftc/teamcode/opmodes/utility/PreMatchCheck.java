@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Utility;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
+import org.firstinspires.ftc.teamcode.constants.FieldConstants;
 import org.firstinspires.ftc.teamcode.constants.IntakeConstants;
 import org.firstinspires.ftc.teamcode.constants.LauncherConstants;
 import org.firstinspires.ftc.teamcode.constants.LoggingConstants;
@@ -43,6 +44,7 @@ public class PreMatchCheck extends OpMode {
         notSet("Launcher tolerance",    LauncherConstants.ENTER_TOLERANCE > 0);
         notSet("Windmill quarter turn", LauncherConstants.QUARTER_TURN_MS > 0);
         notSet("Launcher kF",           LauncherConstants.KF > 0);
+        notSet("Pollen Presets", FieldConstants.POLLEN_PRESETS.length > 0);
 
         line("Live log server OFF", !LoggingConstants.LIVE_SERVER_ENABLED);
         telemetry.update();

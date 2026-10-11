@@ -40,6 +40,8 @@ public class CompetitionTeleOp extends RobotOpMode {
         if (gamepad1.leftBumperWasPressed()){
             robot.unjam();
         }
+        if (gamepad1.rightBumperWasPressed())  robot.startAssist();
+        if (gamepad1.rightBumperWasReleased()) robot.endAssist();
         boolean leftTriggerDown = gamepad1.left_trigger > ControlConstants.TRIGGER_THRESHOLD;
         if (leftTriggerDown && !leftTriggerWasDown) {
                 robot.launch();
@@ -56,11 +58,14 @@ public class CompetitionTeleOp extends RobotOpMode {
     protected void applyFeedback() {
         RobotSnapshot s = robot.snapshot();
         boolean ready = s.readyToLaunch();
+        boolean wasArrived = false;
 
         // blip only on the moment it becomes ready, and not during full auto
         if (ready && !wasReady && !s.fullAuto) {
             gamepad1.rumble(ControlConstants.RUMBLE_READY_MS);
         }
+        if (s.assistArrived && !wasArrived) gamepad1.rumble(ControlConstants.RUMBLE_ARRIVED_MS);
+        wasArrived = s.assistArrived;
         wasReady = ready;
     }
     @Override protected void onModeStart() { robot.startMatch(MatchConstants.TELEOP_SECONDS); }

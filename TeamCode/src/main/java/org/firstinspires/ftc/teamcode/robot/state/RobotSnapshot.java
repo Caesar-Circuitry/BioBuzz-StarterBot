@@ -11,8 +11,10 @@ public class RobotSnapshot {
     public final boolean launcherEnabled;
     public final boolean fullAuto;
     public final double x, y, headingRad;
+    public final String topState;
+    public final boolean assistArrived;
 
-    public RobotSnapshot(Drivetrain.Mode driveMode, Intake.MODE intakeMode, Launcher.State launcherState, boolean launcherEnabled, boolean fullAuto, double x, double y, double headingRad) {
+    public RobotSnapshot(Drivetrain.Mode driveMode, Intake.MODE intakeMode, Launcher.State launcherState, boolean launcherEnabled, boolean fullAuto, double x, double y, double headingRad, String topState, boolean assistArrived) {
         this.driveMode = driveMode;
         this.intakeMode = intakeMode;
         this.launcherState = launcherState;
@@ -21,6 +23,8 @@ public class RobotSnapshot {
         this.x = x;
         this.y = y;
         this.headingRad = headingRad;
+        this.topState = topState;
+        this.assistArrived = assistArrived;
     }
 
     public boolean readyToLaunch() {
