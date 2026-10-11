@@ -45,6 +45,13 @@ public class Robot {
         launcher.setFullAuto(on);
     }
 
+    public void toggleFieldCentric(){
+        driveTrain.toggleFieldCentric();
+    }
+    public void unjam(){
+        run(intake.unjam());
+    }
+
     public void initLoop() {}
     public void start() {}
     public void afterScheduler() {}

@@ -59,4 +59,7 @@ public class Drivetrain {
     public Mode mode() {
         return mode;
     }
+    public void toggleFieldCentric() {
+        fieldCentric = !fieldCentric;
+    }
 }

@@ -16,12 +16,33 @@ public class CompetitionTeleOp extends RobotOpMode {
     @Override protected String modeName() {
         return "Competition TeleOp";
     }
+    private boolean leftTriggerWasDown = false;
 
     @Override protected void handleGamepads() {
         double forward = deadband(-gamepad1.left_stick_y);
         double strafe = deadband(gamepad1.left_stick_x);
         double turn = deadband(gamepad1.right_stick_x);
         robot.drive(forward, strafe, turn);
+
+        if(gamepad1.crossWasPressed()){
+            robot.toggleIntake();
+        }
+        if (gamepad1.circleWasPressed()){
+            robot.toggleLauncher();
+        }
+        if (gamepad1.squareWasPressed()){
+            robot.toggleFieldCentric();
+        }
+        if (gamepad1.leftBumperWasPressed()){
+            robot.unjam();
+        }
+        boolean leftTriggerDown = gamepad1.left_trigger > ControlConstants.TRIGGER_THRESHOLD;
+        if (leftTriggerDown && !leftTriggerWasDown) {
+                robot.launch();
+        }
+        leftTriggerWasDown = leftTriggerDown;
+
+        robot.setFullAuto(gamepad1.right_trigger > ControlConstants.TRIGGER_THRESHOLD);
     }
 
     private static double deadband(double v) {
