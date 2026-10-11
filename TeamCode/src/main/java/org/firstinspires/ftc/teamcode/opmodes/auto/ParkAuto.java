@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.constants.FieldConstants;
 import org.firstinspires.ftc.teamcode.constants.MatchConstants;
 import org.firstinspires.ftc.teamcode.opmodes.RobotOpMode;
 import org.firstinspires.ftc.teamcode.robot.autoPaths.ParkRoutine;
+import org.firstinspires.ftc.teamcode.robot.state.AutoHandoff;
 
 @Autonomous(name = "Park Auto", group = "Auto")
 public class ParkAuto extends RobotOpMode {
@@ -20,7 +21,12 @@ public class ParkAuto extends RobotOpMode {
         return "Auto";
     }
     @Override protected void onModeStart() {
+        AutoHandoff.clear();
         robot.startMatch(MatchConstants.AUTO_SECONDS);
         robot.run(ParkRoutine.build(robot));
+    }
+    @Override protected void onPsiKitStop(){
+        AutoHandoff.save(robot.driveTrain.follower().pose());
+        super.onPsiKitStop();
     }
 }

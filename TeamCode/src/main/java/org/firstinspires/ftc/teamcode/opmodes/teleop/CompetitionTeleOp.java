@@ -7,12 +7,13 @@ import org.firstinspires.ftc.teamcode.constants.ControlConstants;
 import org.firstinspires.ftc.teamcode.constants.FieldConstants;
 import org.firstinspires.ftc.teamcode.constants.MatchConstants;
 import org.firstinspires.ftc.teamcode.opmodes.RobotOpMode;
+import org.firstinspires.ftc.teamcode.robot.state.AutoHandoff;
 import org.firstinspires.ftc.teamcode.robot.state.RobotSnapshot;
 
 @TeleOp(name = "Competition TeleOp", group = "TeleOp")
 public class CompetitionTeleOp extends RobotOpMode {
     @Override protected Pose startPose() {
-        return FieldConstants.TELEOP_START;
+        return AutoHandoff.get(FieldConstants.TELEOP_START);
     }
 
     @Override protected String modeName() {
