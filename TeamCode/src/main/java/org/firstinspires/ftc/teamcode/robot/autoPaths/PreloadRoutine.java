@@ -33,4 +33,5 @@ public final class PreloadRoutine {
                 robot.launcher.disable(),
                 ParkRoutine.build(robot));
     }
+    private PreloadRoutine() {}
 }

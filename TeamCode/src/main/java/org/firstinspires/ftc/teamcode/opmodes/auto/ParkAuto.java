@@ -18,7 +18,7 @@ public class ParkAuto extends RobotOpMode {
 
     @Override
     protected String modeName() {
-        return "Auto";
+        return "Park Auto";
     }
     @Override protected void onModeStart() {
         AutoHandoff.clear();
