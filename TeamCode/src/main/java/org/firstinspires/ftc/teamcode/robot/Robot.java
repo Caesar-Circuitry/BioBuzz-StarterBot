@@ -6,6 +6,7 @@ import com.pedropathing.math.Pose;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.skeletonarmy.marrow.LynxUtil;
+import com.skeletonarmy.marrow.TimerEx;
 
 import org.firstinspires.ftc.teamcode.robot.state.CollectingState;
 import org.firstinspires.ftc.teamcode.robot.state.IdleState;
@@ -23,6 +24,8 @@ public class Robot {
     public final Intake intake;
     public final Launcher launcher;
     public final RobotSnapshot snapshot;
+
+    private TimerEx matchTimer;
 
     private final IdleState idle = new IdleState();
     private final CollectingState collecting = new CollectingState();
@@ -45,6 +48,14 @@ public class Robot {
 
     public void run(Command command) {
         Scheduler.schedule(command);
+    }
+
+    public void startMatch(double seconds) {
+        matchTimer = new TimerEx(seconds);
+        matchTimer.start();
+    }
+    public double matchRemaining() {
+        return matchTimer == null ? Double.POSITIVE_INFINITY : matchTimer.getRemaining();
     }
 
     public void toggleIntake(){
@@ -77,6 +88,7 @@ public class Robot {
     public void start() {}
     public void afterScheduler() {
         Logger.recordOutput("Robot/TopState", topState.name());
+        if (matchTimer != null) Logger.recordOutput("Robot/MatchRemaining", matchTimer.getRemaining());
         topState.execute(this);
     }
     public void stop() {

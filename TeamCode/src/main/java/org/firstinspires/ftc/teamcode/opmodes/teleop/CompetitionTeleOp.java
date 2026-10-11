@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.constants.ControlConstants;
 import org.firstinspires.ftc.teamcode.constants.FieldConstants;
+import org.firstinspires.ftc.teamcode.constants.MatchConstants;
 import org.firstinspires.ftc.teamcode.opmodes.RobotOpMode;
 import org.firstinspires.ftc.teamcode.robot.state.RobotSnapshot;
 
@@ -61,4 +62,6 @@ public class CompetitionTeleOp extends RobotOpMode {
         }
         wasReady = ready;
     }
+    @Override protected void onModeStart() { robot.startMatch(MatchConstants.TELEOP_SECONDS); }
+
 }
