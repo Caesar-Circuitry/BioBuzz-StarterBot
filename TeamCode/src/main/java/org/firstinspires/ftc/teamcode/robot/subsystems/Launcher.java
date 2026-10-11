@@ -163,4 +163,10 @@ public class Launcher {
             feedCycles++;
         }
     }
+    public boolean getEnabled() {
+        return launcherEnabled;
+    }
+    public boolean getFullAuto() {
+        return fullAuto;
+    }
 }
