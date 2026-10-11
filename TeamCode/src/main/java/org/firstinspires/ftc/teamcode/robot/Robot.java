@@ -36,6 +36,10 @@ public class Robot {
     public void afterScheduler() {}
     public void stop() {}
 
+    public void drive(double forward, double strafe, double turn) {
+        driveTrain.drive(forward, strafe, turn);
+    }
+
 
     public void clearBulkCache() {
         LynxUtil.clearBulkCache(hMap);
