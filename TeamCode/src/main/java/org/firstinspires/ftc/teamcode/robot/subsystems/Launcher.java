@@ -67,7 +67,7 @@ public class Launcher {
         return conditional(() -> launcherEnabled, disable(), enable());
     }
 
-    public Command Launch() {
+    public Command launch() {
         return instant(() -> shotRequested = true).requiring(launcher);
     }
 

@@ -24,15 +24,25 @@ public class Robot {
         launcher = new Launcher(this);
         LynxUtil.setBulkCachingMode(hardwareMap, LynxModule.BulkCachingMode.MANUAL);
 
-        Scheduler.schedule(driveTrain.periodic(), intake.periodic());
+        Scheduler.schedule(driveTrain.periodic(), intake.periodic(), launcher.periodic());
     }
 
     public void run(Command command) {
         Scheduler.schedule(command);
     }
 
-    public void  toggleIntake(){
+    public void toggleIntake(){
         run(intake.toggle());
+    }
+
+    public void toggleLauncher(){
+        run(launcher.toggle());
+    }
+    public void launch(){
+        run(launcher.launch());
+    }
+    public void setFullAuto(boolean on){
+        launcher.setFullAuto(on);
     }
 
     public void initLoop() {}
@@ -40,6 +50,7 @@ public class Robot {
     public void afterScheduler() {}
     public void stop() {
         intake.stop();
+        launcher.stop();
     }
 
     public void drive(double forward, double strafe, double turn) {
