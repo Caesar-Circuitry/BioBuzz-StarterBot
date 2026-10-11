@@ -42,7 +42,7 @@ public class Robot {
         assist = new PollenAssist(this);
         intake = new Intake(this);
         launcher = new Launcher(this);
-        snapshot = new RobotSnapshot(driveTrain.mode(), intake.mode(), launcher.state(), launcher.getEnabled(), launcher.getFullAuto(), driveTrain.follower().pose().x(), driveTrain.follower().pose().y(), driveTrain.follower().pose().heading());
+        snapshot = new RobotSnapshot(driveTrain.mode(), intake.mode(), launcher.state(), launcher.getEnabled(), launcher.getFullAuto(), driveTrain.follower().pose().x(), driveTrain.follower().pose().y(), driveTrain.follower().pose().heading(), topState == null ? "null" : topState.name(), assist.arrived());
         LynxUtil.setBulkCachingMode(hardwareMap, LynxModule.BulkCachingMode.MANUAL);
 
         Scheduler.schedule(driveTrain.periodic(), intake.periodic(), launcher.periodic());
