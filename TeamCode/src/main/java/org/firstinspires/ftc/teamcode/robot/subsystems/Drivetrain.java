@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.logging.PedroLogger;
 
 public class Drivetrain {
-    private enum Mode {
+    public enum Mode {
         PATH,
         MANUAL
     }
@@ -54,5 +54,9 @@ public class Drivetrain {
             follower.update();
             PedroLogger.logPose(follower.pose());
         });
+    }
+
+    public Mode mode() {
+        return mode;
     }
 }
