@@ -110,4 +110,8 @@ public class Robot {
     public void clearBulkCache() {
         LynxUtil.clearBulkCache(hMap);
     }
+
+    public RobotSnapshot snapshot() {
+        return snapshot;
+    }
 }

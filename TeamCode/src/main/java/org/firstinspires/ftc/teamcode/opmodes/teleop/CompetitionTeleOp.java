@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.constants.ControlConstants;
 import org.firstinspires.ftc.teamcode.constants.FieldConstants;
 import org.firstinspires.ftc.teamcode.opmodes.RobotOpMode;
+import org.firstinspires.ftc.teamcode.robot.state.RobotSnapshot;
 
 @TeleOp(name = "Competition TeleOp", group = "TeleOp")
 public class CompetitionTeleOp extends RobotOpMode {
@@ -16,6 +17,7 @@ public class CompetitionTeleOp extends RobotOpMode {
     @Override protected String modeName() {
         return "Competition TeleOp";
     }
+    private boolean wasReady = false;
     private boolean leftTriggerWasDown = false;
 
     @Override protected void handleGamepads() {
@@ -47,5 +49,16 @@ public class CompetitionTeleOp extends RobotOpMode {
 
     private static double deadband(double v) {
         return Math.abs(v) < ControlConstants.STICK_DEADBAND ? 0 : v;
+    }
+    @Override
+    protected void applyFeedback() {
+        RobotSnapshot s = robot.snapshot();
+        boolean ready = s.readyToLaunch();
+
+        // blip only on the moment it becomes ready, and not during full auto
+        if (ready && !wasReady && !s.fullAuto) {
+            gamepad1.rumble(ControlConstants.RUMBLE_READY_MS);
+        }
+        wasReady = ready;
     }
 }

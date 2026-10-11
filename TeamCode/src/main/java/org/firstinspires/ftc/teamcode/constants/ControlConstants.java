@@ -6,5 +6,7 @@ public final class ControlConstants {
 
     public static final double FIELD_HEADING_OFFSET_RAD = 0.0;
 
+    public static final int RUMBLE_READY_MS = 150;
+
     private ControlConstants() {}
 }
