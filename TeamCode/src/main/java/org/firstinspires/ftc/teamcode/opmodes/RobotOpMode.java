@@ -4,6 +4,7 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.ivy.Scheduler;
 import com.pedropathing.math.Pose;
 
+import org.firstinspires.ftc.teamcode.constants.LoggingConstants;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.psilynx.psikit.core.Logger;
 import org.psilynx.psikit.ftc.PsiKitIterativeOpMode;
@@ -11,7 +12,7 @@ import org.psilynx.psikit.ftc.PsiKitIterativeOpMode;
 public abstract class RobotOpMode extends PsiKitIterativeOpMode {
     protected Robot robot;
 
-   @Override protected int getRlogPort() {return 0;}
+   @Override protected int getRlogPort() {return LoggingConstants.LIVE_SERVER_ENABLED ? LoggingConstants.LIVE_SERVER_PORT : 0;}
 
     @Override protected void onPsiKitConfigureLogging() {
         Logger.recordMetadata("Robot", "StarterBot");
