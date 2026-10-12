@@ -8,6 +8,13 @@ import org.psilynx.psikit.core.Logger;
 
 import java.util.Map;
 
+/**
+ * Sends Pedro's pose and follower debug values to the PsiKit log, under "Drive/".
+ *
+ * Layer: robot.logging, used by the Drivetrain subsystem. It lives in its own
+ * class so the Drivetrain does not need to know how Pedro packs its debug data.
+ * Only call these from inside the OpMode loop, after the logger has started.
+ */
 public class PedroLogger {
     private PedroLogger() {}
 
@@ -18,6 +25,7 @@ public class PedroLogger {
         Logger.recordOutput("Drive/Pose/HeadingDegrees",Math.toDegrees(pose.heading()));
     }
 
+    // Pedro calls this for us (see Drivetrain: withLogger) every follower.update().
     public static void logFollower(FollowerLog log) {
         logMap("Drive/Follower/Drivetrain", log.drivetrain());
         logMap("Drive/Follower/Algorithm", log.algorithm());
@@ -25,6 +33,8 @@ public class PedroLogger {
         logMap("Drive/Follower/FollowState", log.followState());
     }
 
+    // Pedro hands us Map<String, Object>. The log wants real types, so numbers
+    // go in as doubles and booleans as booleans; anything else becomes text.
     private static void logMap(String prefix, Map<String, Object> map) {
         for (Map.Entry<String, Object> e : map.entrySet()) {
             String key = prefix + "/" + e.getKey();
