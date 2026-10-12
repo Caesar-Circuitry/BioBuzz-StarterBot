@@ -1,5 +1,13 @@
 package org.firstinspires.ftc.teamcode.constants;
 
+/**
+ * Hardware names, speed target, tolerances, PID gains and feed timing for the Launcher (logged as "Shooter").
+ *
+ * Layer: constants. One file per subsystem, so every tunable number has one
+ * home and no logic file has a number typed into it.
+ * A zero here means "not measured yet". The Launcher refuses to reach READY
+ * while TARGET_SPEED or ENTER_TOLERANCE is zero, so do not put a guess in.
+ */
 public final class LauncherConstants {
 
     public static final String LAUNCHER_NAME = "launcher";

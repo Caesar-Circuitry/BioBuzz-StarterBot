@@ -1,5 +1,11 @@
 package org.firstinspires.ftc.teamcode.constants;
 
+/**
+ * Hardware names, directions and powers for the Intake subsystem.
+ *
+ * Layer: constants. One file per subsystem, so every tunable number has one
+ * home and no logic file has a number typed into it.
+ */
 public final class IntakeConstants {
     public static final String MOTOR_NAME = "intake";
     public static final String LEFT_SERVO_NAME = "intakeLeft";
