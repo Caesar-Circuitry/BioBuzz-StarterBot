@@ -17,16 +17,10 @@ public class drivetrain {
     }
 
     public void drive(double x, double rx, double y){
-        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-        double frontLeftPower = (y + x + rx) / denominator;
-        double backLeftPower = (y - x + rx) / denominator;
-        double frontRightPower = (y - x - rx) / denominator;
-        double backRightPower = (y + x - rx) / denominator;
-
-        FLDriveMotor.setPower(frontLeftPower);
-        FRDriveMotor.setPower(frontRightPower);
-        RLDriveMotor.setPower(backLeftPower);
-        RRDriveMotor.setPower(backRightPower);
+        FLDriveMotor.setPower(rx+(y+x));
+        FRDriveMotor.setPower(rx-(y-x));
+        RLDriveMotor.setPower(rx+(y-x));
+        RRDriveMotor.setPower(rx-(y+x));
     }
     public void stop(){
         FLDriveMotor.setPower(0);
