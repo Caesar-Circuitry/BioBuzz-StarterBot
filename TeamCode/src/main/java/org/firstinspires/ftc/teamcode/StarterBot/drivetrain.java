@@ -17,7 +17,10 @@ public class drivetrain {
     }
 
     public void drive(double x, double rx, double y){
-
+        FLDriveMotor.setPower(rx+(y+x));
+        FRDriveMotor.setPower(rx-(y-x));
+        RLDriveMotor.setPower(rx+(y-x));
+        RRDriveMotor.setPower(rx-(y+x));
     }
     public void stop(){
         FLDriveMotor.setPower(0);
