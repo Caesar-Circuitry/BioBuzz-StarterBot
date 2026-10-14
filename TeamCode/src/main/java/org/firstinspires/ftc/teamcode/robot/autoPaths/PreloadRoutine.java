@@ -52,4 +52,8 @@ public final class PreloadRoutine {
     }
 
     private PreloadRoutine() {}
+
+    public String NAME(){
+        return NAME;
+    }
 }

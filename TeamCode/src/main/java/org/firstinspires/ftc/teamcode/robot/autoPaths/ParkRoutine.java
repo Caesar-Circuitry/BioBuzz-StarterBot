@@ -50,4 +50,8 @@ public final class ParkRoutine {
     }
 
     private ParkRoutine() {}
+
+    public String NAME(){
+        return NAME;
+    }
 }

@@ -181,6 +181,7 @@ public class Robot {
         if (battery != null) Logger.recordOutput("Robot/BatteryVolts", battery.getVoltage());
 
         assist.log();
+        clearBulkCache();
     }
 
     // Leave nothing powered when the OpMode ends. assist.stop() is also what
