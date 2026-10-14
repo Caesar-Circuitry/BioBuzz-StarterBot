@@ -16,6 +16,9 @@ public class drivetrain {
         RRDriveMotor = hardwareMap.get(DcMotorEx.class, "RRDrive");
     }
 
+    public void drive(double x, double rx, double y){
+
+    }
     public void stop(){
         FLDriveMotor.setPower(0);
         FRDriveMotor.setPower(0);
