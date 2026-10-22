@@ -5,9 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class drivetrain {
     public final DcMotorEx FLDriveMotor;
     public final DcMotorEx FRDriveMotor;
-
     public final DcMotorEx RLDriveMotor;
-
     public final DcMotorEx RRDriveMotor;
     public drivetrain(HardwareMap hardwareMap){
         FLDriveMotor = hardwareMap.get(DcMotorEx.class, "FLDrive");
@@ -28,6 +26,4 @@ public class drivetrain {
         RLDriveMotor.setPower(0);
         RRDriveMotor.setPower(0);
     }
-
-
 }
