@@ -35,26 +35,49 @@ package org.firstinspires.ftc.teamcode.StarterBot;
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.psilynx.psikit.core.Logger;
+
+/**
+ * Drives forward DRIVE_DISTANCE_MM and stops. Now a PsiKit OpMode (see
+ * StarterBotOpMode): progress is logged under Auto/...
+ */
+@Disabled
 @Autonomous(name = "StarterBotAuto", group = "StarterBot")
-public class StarterBotAuto extends OpMode {
+public class StarterBotAuto extends StarterBotOpMode {
     private static final double DRIVE_SPEED = 0.5;
     private static final double DRIVE_DISTANCE_MM = 600;
     private static final double WHEEL_DIAMETER_MM = 96;
     private static final double ENCODER_TICKS_PER_REV = 537.7;
     private static final double TICKS_PER_MM =
             ENCODER_TICKS_PER_REV / (WHEEL_DIAMETER_MM * Math.PI);
+    private static final double HOLD_SECONDS = 0.2;
 
     private final ElapsedTime driveTimer = new ElapsedTime();
     private DcMotor leftDrive;
     private DcMotor rightDrive;
     private boolean complete;
+    private int targetTicks;
+
+    @Override protected String modeName() {
+        return "StarterBotAuto";
+    }
+
+    @Override protected void onPsiKitConfigureLogging() {
+        super.onPsiKitConfigureLogging();
+        Logger.recordMetadata("Auto/DriveSpeed", String.valueOf(DRIVE_SPEED));
+        Logger.recordMetadata("Auto/DriveDistanceMm", String.valueOf(DRIVE_DISTANCE_MM));
+        Logger.recordMetadata("Auto/WheelDiameterMm", String.valueOf(WHEEL_DIAMETER_MM));
+        Logger.recordMetadata("Auto/EncoderTicksPerRev", String.valueOf(ENCODER_TICKS_PER_REV));
+        Logger.recordMetadata("Auto/HoldSeconds", String.valueOf(HOLD_SECONDS));
+    }
 
     @Override
-    public void init() {
+    protected void onPsiKitInit() {
+        super.onPsiKitInit();
         leftDrive = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
 
@@ -69,13 +92,13 @@ public class StarterBotAuto extends OpMode {
     }
 
     @Override
-    public void start() {
+    protected void onPsiKitStart() {
         driveTimer.reset();
     }
 
     @Override
-    public void loop() {
-        if (!complete && drive(DRIVE_SPEED, DRIVE_DISTANCE_MM, 0.2)) {
+    protected void onPsiKitLoop() {
+        if (!complete && drive(DRIVE_SPEED, DRIVE_DISTANCE_MM, HOLD_SECONDS)) {
             stopDrive();
             complete = true;
         }
@@ -84,15 +107,24 @@ public class StarterBotAuto extends OpMode {
         telemetry.addData("Left position", leftDrive.getCurrentPosition());
         telemetry.addData("Right position", rightDrive.getCurrentPosition());
         telemetry.update();
+
+        Logger.recordOutput("Auto/Complete", complete);
+        Logger.recordOutput("Auto/TargetTicks", targetTicks);
+        Logger.recordOutput("Auto/LeftPositionTicks", leftDrive.getCurrentPosition());
+        Logger.recordOutput("Auto/RightPositionTicks", rightDrive.getCurrentPosition());
+        Logger.recordOutput("Auto/LeftErrorTicks", targetTicks - leftDrive.getCurrentPosition());
+        Logger.recordOutput("Auto/RightErrorTicks", targetTicks - rightDrive.getCurrentPosition());
+        Logger.recordOutput("Auto/TimeAtTargetSec", driveTimer.seconds());
+        logRobot();
     }
 
     @Override
-    public void stop() {
-        stopDrive();
+    protected void onPsiKitStop() {
+        if (leftDrive != null) stopDrive();
     }
 
     private boolean drive(double speed, double distanceMm, double holdSeconds) {
-        int targetTicks = (int) (distanceMm * TICKS_PER_MM);
+        targetTicks = (int) (distanceMm * TICKS_PER_MM);
         leftDrive.setTargetPosition(targetTicks);
         rightDrive.setTargetPosition(targetTicks);
         leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);

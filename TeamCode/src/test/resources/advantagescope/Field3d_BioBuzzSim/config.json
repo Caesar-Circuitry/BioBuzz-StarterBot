@@ -1,0 +1,128 @@
+{
+  "name": "2026-2027 Field (BioBuzz Sim)",
+  "isFTC": true,
+  "coordinateSystem": "center-rotated",
+  "rotations": [
+    {
+      "axis": "x",
+      "degrees": 90
+    }
+  ],
+  "position": [
+    0,
+    0,
+    0
+  ],
+  "widthInches": 143.182,
+  "heightInches": 143.182,
+  "driverStations": [
+    [
+      2.515,
+      -0.803
+    ],
+    [
+      2.515,
+      0.803
+    ],
+    [
+      -2.515,
+      0.803
+    ],
+    [
+      -2.515,
+      -0.803
+    ]
+  ],
+  "gamePieces": [
+    {
+      "name": "Pollen",
+      "rotations": [],
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "stagedObjects": [
+        "am-5851_Pollen",
+        "am-5851_Pollen_1",
+        "am-5851_Pollen_2",
+        "am-5851_Pollen_3",
+        "am-5851_Pollen_4",
+        "am-5851_Pollen_5",
+        "am-5851_Pollen_6",
+        "am-5851_Pollen_7",
+        "am-5851_Pollen_8",
+        "am-5851_Pollen_9",
+        "am-5851_Pollen_10",
+        "am-5851_Pollen_11",
+        "am-5851_Pollen_12",
+        "am-5851_Pollen_13",
+        "am-5851_Pollen_14",
+        "am-5851_Pollen_15",
+        "am-5851_Pollen_16",
+        "am-5851_Pollen_17",
+        "am-5851_Pollen_18",
+        "am-5851_Pollen_19",
+        "am-5851_Pollen_20",
+        "am-5851_Pollen_21",
+        "am-5851_Pollen_22",
+        "am-5851_Pollen_23",
+        "am-5851_Pollen_24",
+        "am-5851_Pollen_25",
+        "am-5851_Pollen_26",
+        "am-5851_Pollen_27",
+        "am-5851_Pollen_28",
+        "am-5851_Pollen_29",
+        "am-5851_Pollen_30",
+        "am-5851_Pollen_31",
+        "am-5851_Pollen_32",
+        "am-5851_Pollen_33",
+        "am-5851_Pollen_34",
+        "am-5851_Pollen_35",
+        "am-5851_Pollen_36",
+        "am-5851_Pollen_37",
+        "am-5851_Pollen_38",
+        "am-5851_Pollen_39"
+      ]
+    },
+    {
+      "name": "Nectar (Blue)",
+      "rotations": [],
+      "position": [
+        0,
+        0.0124968,
+        0
+      ],
+      "stagedObjects": [
+        "am-5852_Blue_Nectar",
+        "am-5852_Blue_Nectar_1",
+        "am-5852_Blue_Nectar_2",
+        "am-5852_Blue_Nectar_3",
+        "am-5852_Blue_Nectar_4",
+        "am-5852_Blue_Nectar_5",
+        "am-5852_Blue_Nectar_6",
+        "am-5852_Blue_Nectar_7"
+      ]
+    },
+    {
+      "name": "Nectar (Red)",
+      "rotations": [],
+      "position": [
+        0,
+        0.0052324,
+        0
+      ],
+      "stagedObjects": [
+        "am-5852_Red_Nectar",
+        "am-5852_Red_Nectar_1",
+        "am-5852_Red_Nectar_2",
+        "am-5852_Red_Nectar_3",
+        "am-5852_Red_Nectar_4",
+        "am-5852_Red_Nectar_5",
+        "am-5852_Red_Nectar_6",
+        "am-5852_Red_Nectar_7"
+      ]
+    }
+  ],
+  "aprilTags": []
+}

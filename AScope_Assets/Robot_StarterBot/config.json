@@ -1,0 +1,12 @@
+{
+  "name": "GobildaStarterBot",
+  "isFTC": true, 
+  "disableSimplification": false,
+  "rotations": [
+    {"axis": "x", "degrees": 90},
+    {"axis": "z", "degrees": 90}
+  ],
+  "position": [-0.012, 0, 0.05], 
+  "cameras": [],
+  "components": []
+}

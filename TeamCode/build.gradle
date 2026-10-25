@@ -11,16 +11,37 @@ apply plugin: 'com.android.application'
 // before doing so.
 
 // Custom definitions may go here
+buildscript {
+    repositories {
+        mavenCentral()
+        google()
+        maven {
+            url "https://repo.dairy.foundation/releases"
+        }
+    }
+    dependencies {
+        classpath "dev.frozenmilk:Load:0.3.2"
+    }
+}
 
 // Include common definitions from above.
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
+apply plugin: 'dev.frozenmilk.sinister.sloth.load'
 
 android {
     namespace = 'org.firstinspires.ftc.teamcode'
 
     packagingOptions {
         jniLibs.useLegacyPackaging true
+    }
+
+    // The simulator runs as a local unit test, where android.jar is only stubs that throw
+    // "Method ... not mocked". PsiKit's hardwareMap wrapper builds FTC SDK motor objects
+    // that log through android.util.Log, so let those stubs return defaults instead.
+    // Only affects unit tests (src/test), never the robot.
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
 }
 
