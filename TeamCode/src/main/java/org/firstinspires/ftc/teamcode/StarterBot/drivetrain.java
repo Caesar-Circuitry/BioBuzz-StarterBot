@@ -14,11 +14,22 @@ public class drivetrain {
         RRDriveMotor = hardwareMap.get(DcMotorEx.class, "RRDrive");
     }
 
-    public void drive(double x, double rx, double y){
-        FLDriveMotor.setPower(rx+(y+x));
-        FRDriveMotor.setPower(rx-(y-x));
-        RLDriveMotor.setPower(rx+(y-x));
-        RRDriveMotor.setPower(rx-(y+x));
+    public void drive(double x, double y, double rx) {
+        double frontLeft = y + x + rx;
+        double frontRight = y - x - rx;
+        double rearLeft = y - x + rx;
+        double rearRight = y + x - rx;
+
+        double maxPower = Math.max(
+                1.0,
+                Math.max(
+                        Math.max(Math.abs(frontLeft), Math.abs(frontRight)),
+                        Math.max(Math.abs(rearLeft), Math.abs(rearRight))));
+
+        FLDriveMotor.setPower(frontLeft / maxPower);
+        FRDriveMotor.setPower(frontRight / maxPower);
+        RLDriveMotor.setPower(rearLeft / maxPower);
+        RRDriveMotor.setPower(rearRight / maxPower);
     }
     public void stop(){
         FLDriveMotor.setPower(0);
