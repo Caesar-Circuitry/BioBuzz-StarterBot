@@ -19,7 +19,7 @@ public class Teleop extends LinearOpMode {
                 double x = gamepad1.left_stick_x;
                 double y = -gamepad1.left_stick_y; // Invert Y axis
                 double rx = gamepad1.right_stick_x;
-                drive.drive(x, rx, y);
+                drive.drive(x, y, rx);
 
                 // Launcher control
                 if (gamepad1.a) {
