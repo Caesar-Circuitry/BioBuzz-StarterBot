@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.StarterBot;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
 public class drivetrain {
     public final DcMotorEx FLDriveMotor;
     public final DcMotorEx FRDriveMotor;
@@ -12,6 +14,9 @@ public class drivetrain {
         FRDriveMotor = hardwareMap.get(DcMotorEx.class, "FRDrive");
         RLDriveMotor = hardwareMap.get(DcMotorEx.class, "RLDrive");
         RRDriveMotor = hardwareMap.get(DcMotorEx.class, "RRDrive");
+
+        RLDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        RRDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void drive(double x, double y, double rx) {
