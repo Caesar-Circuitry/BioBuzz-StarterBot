@@ -22,8 +22,8 @@ public class drivetrain {
     public void drive(double x, double y, double rx) {
         double frontLeft = y + x + rx;
         double frontRight = y - x - rx;
-        double rearLeft = y - x + rx;
-        double rearRight = y + x - rx;
+        double rearLeft = y + x - rx;
+        double rearRight = y - x + rx;
 
         double maxPower = Math.max(
                 1.0,
