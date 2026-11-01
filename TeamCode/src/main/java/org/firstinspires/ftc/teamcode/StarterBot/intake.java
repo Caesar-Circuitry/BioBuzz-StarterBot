@@ -13,6 +13,7 @@ public class intake {
 
     public enum IntakeState {
         INTAKE,
+        INTAKEIDLE,
         OUTTAKE,
         STOPPED
     }
@@ -28,13 +29,18 @@ public class intake {
         switch (state) {
             case INTAKE:
                 intakeMotor.setPower(1.0);
-                intakeServo1.setPower(1.0);
-                intakeServo2.setPower(-1.0);
+                intakeServo1.setPower(-1.0);
+                intakeServo2.setPower(1.0);
+                break;
+            case INTAKEIDLE:
+                intakeMotor.setPower(0.5);
+                intakeServo1.setPower(-0.5);
+                intakeServo2.setPower(0.5);
                 break;
             case OUTTAKE:
                 intakeMotor.setPower(-1.0);
-                intakeServo1.setPower(-1.0);
-                intakeServo2.setPower(1.0);
+                intakeServo1.setPower(1.0);
+                intakeServo2.setPower(-1.0);
                 break;
             case STOPPED:
                 intakeMotor.setPower(0.0);

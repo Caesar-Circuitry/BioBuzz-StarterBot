@@ -16,21 +16,22 @@ public class Teleop extends LinearOpMode {
 
             while (opModeIsActive()) {
                 // Drive control
-                double x = gamepad1.left_stick_x;
+                double x = gamepad1.right_stick_x;
                 double y = -gamepad1.left_stick_y; // Invert Y axis
-                double rx = gamepad1.right_stick_x;
-                drive.drive(x, rx, y);
+                double rx = gamepad1.left_stick_x;
+                drive.drive(x, y, rx);
 
                 // Launcher control
                 if (gamepad1.a) {
                     launch.launchSTANDARD();
                 } else if (gamepad1.b) {
-                    launch.launchVARIABLE(0.5, 0.5); // Example variable launch speed
+                    launch.launchVARIABLE(0.5, 1); // Example variable launch speed
                 } else {
                     launch.stop();
                 }
 
                 // Intake control
+                intakeSystem.setIntakeState(intake.IntakeState.INTAKEIDLE);
                 if (gamepad1.x) {
                     intakeSystem.setIntakeState(intake.IntakeState.INTAKE);
                 } else if (gamepad1.y) {
