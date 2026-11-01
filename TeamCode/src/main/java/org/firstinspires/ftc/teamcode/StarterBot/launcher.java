@@ -17,6 +17,11 @@ public class launcher {
     }
     public void launchSTANDARD(){
         launcherMotor.setPower(1.0);
+        try {
+            wait(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         launcherServo.setPower(1.0);//IDK what a 'standard' launch speed is
     }
     public void stop(){

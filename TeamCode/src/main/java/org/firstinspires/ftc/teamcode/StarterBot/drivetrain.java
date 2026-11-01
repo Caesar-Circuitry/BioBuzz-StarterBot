@@ -38,8 +38,12 @@ public class drivetrain {
     }
     public void stop(){
         FLDriveMotor.setPower(0);
+        FLDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         FRDriveMotor.setPower(0);
+        FLDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         RLDriveMotor.setPower(0);
+        FLDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         RRDriveMotor.setPower(0);
+        FLDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
     }
 }
