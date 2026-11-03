@@ -26,6 +26,3 @@ public class auto extends OpMode {
     }
 }
 
-public class auto {
-
-}

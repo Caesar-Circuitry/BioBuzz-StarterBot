@@ -15,15 +15,24 @@ public class drivetrain {
         RLDriveMotor = hardwareMap.get(DcMotorEx.class, "RLDrive");
         RRDriveMotor = hardwareMap.get(DcMotorEx.class, "RRDrive");
 
-        RLDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        FLDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        FRDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        RLDriveMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         RRDriveMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
+        // brake all 4 once here (old stop() only braked FL)
+        FLDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        FRDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        RLDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        RRDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
     }
 
     public void drive(double x, double y, double rx) {
-        double frontLeft = y + x + rx;
+        double frontLeft  = y + x + rx;
         double frontRight = y - x - rx;
-        double rearLeft = y + x - rx;
-        double rearRight = y - x + rx;
+        double rearLeft   = y - x + rx;
+        double rearRight  = y + x - rx;
 
         double maxPower = Math.max(
                 1.0,
@@ -38,12 +47,8 @@ public class drivetrain {
     }
     public void stop(){
         FLDriveMotor.setPower(0);
-        FLDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         FRDriveMotor.setPower(0);
-        FLDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         RLDriveMotor.setPower(0);
-        FLDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         RRDriveMotor.setPower(0);
-        FLDriveMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
     }
 }

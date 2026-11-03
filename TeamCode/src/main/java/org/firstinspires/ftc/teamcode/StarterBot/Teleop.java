@@ -11,24 +11,40 @@ public class Teleop extends LinearOpMode {
         launcher launch = new launcher(hardwareMap);
         intake intakeSystem = new intake(hardwareMap);
 
+        boolean wasReady = false;
+
         try {
             waitForStart();
 
             while (opModeIsActive()) {
                 // Drive control
-                double x = gamepad1.right_stick_x;
-                double y = -gamepad1.left_stick_y; // Invert Y axis
-                double rx = gamepad1.left_stick_x;
+                double x = gamepad1.left_stick_x;     // strafe (left stick)
+                double y = -gamepad1.left_stick_y;    // forward/back (left stick)
+                double rx = gamepad1.right_stick_x;   // turn (right stick)
                 drive.drive(x, y, rx);
 
-                // Launcher control
-                if (gamepad1.a) {
-                    launch.launchSTANDARD();
-                } else if (gamepad1.b) {
-                    launch.launchVARIABLE(0.5, 1); // Example variable launch speed
+                if (gamepad1.right_trigger > 0.5) {
+                    launch.rev(launcher.LAUNCH_POWER);
+                    // launch.rev(launcher.LAUNCH_VELOCITY);
                 } else {
-                    launch.stop();
+                    launch.stopFlywheel();
                 }
+                launch.feed(gamepad1.a, 1.0);
+
+                boolean ready = launch.isReady();
+                if (ready && !wasReady) {
+                    gamepad1.rumble(300);   // 300 ms buzz
+                }
+                wasReady = ready;
+
+//                // Launcher control
+//                if (gamepad1.a) {
+//                    launch.launchSTANDARD();
+//                } else if (gamepad1.b) {
+//                    launch.launchVARIABLE(0.5, 1); // Example variable launch speed
+//                } else {
+//                    launch.stop();
+//                }
 
                 // Intake control
                 intakeSystem.setIntakeState(intake.IntakeState.INTAKEIDLE);
@@ -39,6 +55,9 @@ public class Teleop extends LinearOpMode {
                 } else {
                     intakeSystem.setIntakeState(intake.IntakeState.STOPPED);
                 }
+                telemetry.addData("Launcher ready", ready);
+                telemetry.addData("Flywheel velocity", launch.launcherMotor.getVelocity());
+                telemetry.update();
             }
         } finally {
             drive.stop();
