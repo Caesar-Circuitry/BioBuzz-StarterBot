@@ -1,61 +1,165 @@
 package org.firstinspires.ftc.teamcode.StarterBot;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
-public class launcher{
+@Configurable
+public class launcher {
+    public static double TARGET_VELOCITY = 1240;
+    public static double kP = 0.0015;
+    public static double kI = 0.0;
+    public static double kD = 0.0;
+    public static double kF = 0.0004064516;
+    public static double READY_TOLERANCE = 50;
+    public static double INTEGRAL_LIMIT = 500;
+    public static double SHOT_DIP = 150;
+    private static final double KALMAN_Q = 50;
+    private static final double KALMAN_R = 1500;
 
-    //commented things are for velocity
-    // public static final double LAUNCH_VELOCITY = 1400;   // ticks/sec, tune this
-    // private static final double VELOCITY_TOLERANCE = 50;
-    private static final double revSeconds = 1.5;
-    public static final double LAUNCH_POWER = 0.8;   // tune this
+    private static final double NOMINAL_VOLTAGE = 12.0;
+    private static final double VOLTAGE_READ_SECONDS = 0.25;
+
     public final DcMotorEx launcherMotor;
     public final CRServo launcherServo;
-    private final ElapsedTime spinUpTimer = new ElapsedTime();
-    private boolean motorSpinning;
-    private double activeLaunchSpeed;
+    private final VoltageSensor voltageSensor;
+    private final KalmanFilter velocityFilter = new KalmanFilter(KALMAN_Q, KALMAN_R);
+    private final ElapsedTime loopTimer = new ElapsedTime();
+    private final ElapsedTime voltageTimer = new ElapsedTime();
 
-    public launcher(HardwareMap hardwareMap){
+    // flywheel state
+    private boolean motorSpinning = false;
+    private double targetVelocity = 0;
+    private double rawVelocity = 0;
+    private double filteredVelocity = 0;
+    private double batteryVoltage = NOMINAL_VOLTAGE;
+    private double integral = 0;
+    private double lastError = 0;
+    private double motorPower = 0;
+
+    // feed state
+    private boolean feeding = false;
+    private boolean lastButtonState = false;
+    private boolean feedBlocked = false;
+
+    // shot detection
+    private boolean shotInProgress = false;
+    private boolean shotDetected = false;
+
+    public launcher(HardwareMap hardwareMap) {
         launcherMotor = hardwareMap.get(DcMotorEx.class, "launcher");
         launcherServo = hardwareMap.get(CRServo.class, "launcherServo");
+        launcherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        // launcherMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        // launcherMotor.setVelocityPIDFCoefficients(p, i, d, f);
+        launcherMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        voltageSensor = hardwareMap.voltageSensor.iterator().next();
+        batteryVoltage = voltageSensor.getVoltage();
     }
 
-    public void rev(double launchSpeed){
-        if (!motorSpinning || activeLaunchSpeed != launchSpeed){
-            activeLaunchSpeed = launchSpeed;
-            spinUpTimer.reset();
-            motorSpinning = true;
+    public void rev(double velocity) {
+        if (!motorSpinning || velocity != targetVelocity) {
+            integral = 0;
+            lastError = velocity - filteredVelocity;
         }
-        launcherMotor.setPower(launchSpeed);
-        // launcherMotor.setVelocity(launchSpeed);
+        targetVelocity = velocity;
+        motorSpinning = true;
     }
-    public boolean isReady(){
-        return motorSpinning && spinUpTimer.seconds() >= revSeconds;
+    public void update() {
+        double dt = loopTimer.seconds();
+        loopTimer.reset();
+        if (dt <= 0 || dt > 0.5) dt = 0.02;
 
-        // return motorSpinning
-        //         && Math.abs(launcherMotor.getVelocity() - activeLaunchSpeed) < VELOCITY_TOLERANCE;
+        rawVelocity = launcherMotor.getVelocity();
+        filteredVelocity = velocityFilter.update(rawVelocity);
+
+        boolean dipping = motorSpinning && feeding && (targetVelocity - rawVelocity) > SHOT_DIP;
+        if (dipping && !shotInProgress) {
+            shotDetected = true;
+        }
+        shotInProgress = dipping;
+
+        if (voltageTimer.seconds() >= VOLTAGE_READ_SECONDS) {
+            double v = voltageSensor.getVoltage();
+            if (v > 1) batteryVoltage = v;
+            voltageTimer.reset();
+        }
+
+        if (!motorSpinning) {
+            motorPower = 0;
+            launcherMotor.setPower(0);
+            return;
+        }
+
+        double error = targetVelocity - filteredVelocity;
+        integral = Range.clip(integral + error * dt, -INTEGRAL_LIMIT, INTEGRAL_LIMIT);
+        double derivative = (error - lastError) / dt;
+        lastError = error;
+
+        double output = kF * targetVelocity
+                + kP * error
+                + kI * integral
+                + kD * derivative;
+
+        output *= NOMINAL_VOLTAGE / batteryVoltage;
+
+        motorPower = Range.clip(output, 0, 1);
+        launcherMotor.setPower(motorPower);
     }
-    public void feed(boolean buttonPressed, double servoPower){
-        if (buttonPressed && isReady()) {
+
+    public boolean isReady() {
+        return motorSpinning && Math.abs(targetVelocity - filteredVelocity) < READY_TOLERANCE;
+    }
+
+    public void feed(boolean button, double servoPower) {
+        if (button && !lastButtonState) {
+            feeding = !feeding;
+        }
+        lastButtonState = button;
+
+        if (feeding && isReady() && !feedBlocked) {
             launcherServo.setPower(servoPower);
         } else {
             launcherServo.setPower(0);
         }
     }
 
-    public void stopFlywheel(){
-        launcherMotor.setPower(0);
-        // launcherMotor.setVelocity(0);
-        motorSpinning = false;
+    public void setFeedBlocked(boolean blocked) {
+        feedBlocked = blocked;
     }
+
+    public void stopFeeding() {
+        feeding = false;
+    }
+
+    public void stopFlywheel() {
+        motorSpinning = false;
+        feeding = false;
+        integral = 0;
+        launcherMotor.setPower(0);
+    }
+
     public void stop() {
         launcherServo.setPower(0);
         stopFlywheel();
     }
+
+    public boolean consumeShot() {
+        boolean shot = shotDetected;
+        shotDetected = false;
+        return shot;
+    }
+
+    // for telemetry / graphing
+    public double getRawVelocity()      { return rawVelocity; }
+    public double getFilteredVelocity() { return filteredVelocity; }
+    public double getTargetVelocity()   { return targetVelocity; }
+    public double getBatteryVoltage()   { return batteryVoltage; }
+    public double getMotorPower()       { return motorPower; }
+    public boolean isFeeding()          { return feeding; }
 }
