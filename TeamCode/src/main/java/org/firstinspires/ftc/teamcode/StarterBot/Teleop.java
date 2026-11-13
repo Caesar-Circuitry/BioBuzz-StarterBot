@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.pedro.Constants;
 // drivetrain class and the hold-while-launching feature is turned off.
 @TeleOp
 public class Teleop extends LinearOpMode {
-    private static final int POLLEN_PIPELINE = 0;   // change if your pollen pipeline is a different number
+    private static final boolean RED_ALLIANCE = true;   // which nectar colour is ours
 
     // How far the robot can be pushed before feeding pauses
     private static final double HOLD_TOLERANCE_INCHES = 2.0;
@@ -29,7 +29,8 @@ public class Teleop extends LinearOpMode {
         launcher launch = new launcher(hardwareMap);
         intake intakeSystem = new intake(hardwareMap);
         BallCounter balls = new BallCounter(hardwareMap);
-        LimelightVision vision = new LimelightVision(hardwareMap, POLLEN_PIPELINE);
+        LimelightVision vision = new LimelightVision(hardwareMap);
+        vision.setAlliance(RED_ALLIANCE);
         PollenAssist assist = new PollenAssist();
 
         boolean wasReady = false;
@@ -41,9 +42,24 @@ public class Teleop extends LinearOpMode {
             waitForStart();
 
             while (opModeIsActive()) {
-                vision.update();
                 boolean launching = gamepad1.left_trigger > 0.5;
                 boolean assisting = gamepad1.left_bumper && !launching;
+
+                // ===== CAMERA =====
+                // Camera is UP on the AprilTags while the launcher is revving (left trigger) or
+                // Y is held. The rest of the time, including intaking, it is DOWN on Hive vision.
+                // X = go after pollen, B = go after our nectar.
+                if (gamepad1.x) {
+                    vision.setTarget(LimelightVision.target.POLLEN);
+                } else if (gamepad1.b) {
+                    vision.setTarget(LimelightVision.target.NECTAR);
+                }
+                if (launching || gamepad1.y) {
+                    vision.setPipeline(LimelightVision.pipeline.APRILTAG);
+                } else {
+                    vision.setPipeline(LimelightVision.pipeline.HIVE);
+                }
+                vision.update();
 
                 // ===== DRIVE / HOLD =====
                 boolean onSpot = true;
@@ -130,7 +146,10 @@ public class Teleop extends LinearOpMode {
                 telemetry.addData("On spot", onSpot);
                 telemetry.addData("Balls", balls.getCount() + " / " + BallCounter.MAX_BALLS);
                 telemetry.addData("Sensor (cm)", "%.1f", balls.getDistanceCm());
-                telemetry.addData("Pollen seen", vision.hasTarget());
+                telemetry.addData("Camera", vision.getPipeline() + (vision.isReady() ? "" : " (switching)"));
+                telemetry.addData("Looking for", vision.getTarget());
+                telemetry.addData("Seen", vision.getBestClassName());
+                telemetry.addData("Tags seen", vision.getTagCount());
                 telemetry.addData("tx / ty", "%.1f / %.1f", vision.getTx(), vision.getTy());
                 telemetry.addData("Launcher ready", ready);
                 telemetry.addData("Feeding", launch.isFeeding());
