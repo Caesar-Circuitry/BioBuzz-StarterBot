@@ -12,7 +12,6 @@ public class BallCounter {
     public static double BALL_GONE_CM = 12;
     public static int MAX_BALLS = 4;
     public static double MIN_GAP_SECONDS = 0.15;
-
     private static final double KALMAN_Q = 10;
     private static final double KALMAN_R = 4;
     private static final double MAX_RANGE_CM = 50;
@@ -48,6 +47,7 @@ public class BallCounter {
     public void removeOne()            { count = Math.max(count - 1, 0); }
 
     public void reset()                { count = 0; }
+    public void setCount(int n)        { count = Math.max(0, Math.min(n, MAX_BALLS)); }
     public int getCount()              { return count; }
     public boolean isFull()            { return count >= MAX_BALLS; }
     public boolean isBallPresent()     { return ballPresent; }
