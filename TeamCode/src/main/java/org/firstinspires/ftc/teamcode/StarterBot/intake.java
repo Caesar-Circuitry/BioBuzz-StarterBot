@@ -8,8 +8,7 @@ import java.util.Objects;
 
 public class intake {
     private final DcMotorEx intakeMotor;
-    private final CRServo intakeServo1;
-    private final CRServo intakeServo2;
+
 
     public enum IntakeState {
         INTAKE,
@@ -20,8 +19,7 @@ public class intake {
 
     public intake(HardwareMap hardwareMap) {
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intake");
-        intakeServo1 = hardwareMap.get(CRServo.class, "intakeServo1");
-        intakeServo2 = hardwareMap.get(CRServo.class, "intakeServo2");
+
     }
 
     public void setIntakeState(IntakeState state) {
